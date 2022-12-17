@@ -55,9 +55,9 @@ export const shortLinkRouter = router({
                 userId: ctx.session?.user?.id,
                 AND: input.keywords ? [{
                     OR: [
-                        { url: { mode: 'sensitive', contains: input.keywords } },
-                        { slug: { mode: 'sensitive',contains: input.keywords } },
-                        { description: { mode: 'sensitive', contains: input.keywords } },
+                        { url: input.keywords },
+                        { slug: input.keywords },
+                        { description: input.keywords },
                     ]
                 }] : undefined
             }
@@ -68,7 +68,7 @@ export const shortLinkRouter = router({
     validateSlug: publicProcedure.input(z.object({ slugId: z.string().nullish()}).nullish()).query(({ctx, input}) => {
         return ctx.prisma.shortLink?.findUnique({
             where: {
-                slug: input?.slugId || ""
+                slug:  input?.slugId || ""
             }
         });
     }),
