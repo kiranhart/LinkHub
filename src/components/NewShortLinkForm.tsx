@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid';
+import { generateSlug as generateWordSlug } from 'random-word-slugs';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,7 +17,7 @@ const NewShortLinkForm: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const router = useRouter();
 
-    const { mutate } = trpc.shortLinks.createLink.useMutation({
+    const { mutate, error } = trpc.shortLinks.createLink.useMutation({
         onSuccess: () => {
             router.push('/dashboard');
             setLoading(false);
@@ -27,7 +27,7 @@ const NewShortLinkForm: React.FC = () => {
     const generateSlug = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        const slug = nanoid(6);
+        const slug = generateWordSlug();
         setValue('slug', slug);
     };
 
@@ -69,22 +69,25 @@ const NewShortLinkForm: React.FC = () => {
                 />
                 <div className="flex justify-between gap-2">
                     <div className="flex gap-2">
-                        <input
-                            id="slug"
-                            className="rounded-md border-2 border-gray-500/25 py-2 px-4 focus:outline-none"
-                            type="text"
-                            placeholder="Enter Slug"
-                            {...register('slug', {
-                                required: {
-                                    value: true,
-                                    message: 'Please enter a slug or generate one',
-                                },
-                                pattern: {
-                                    value: /^[a-zA-Z0-9_-]+$/i,
-                                    message: 'Please enter a valid slug',
-                                },
-                            })}
-                        />
+                        <div>
+                            <input
+                                id="slug"
+                                className="rounded-md border-2 border-gray-500/25 py-2 px-4 focus:outline-none"
+                                type="text"
+                                placeholder="Enter Slug"
+                                {...register('slug', {
+                                    required: {
+                                        value: true,
+                                        message: 'Please enter a slug or generate one',
+                                    },
+                                    pattern: {
+                                        value: /^[a-zA-Z0-9_-]+$/i,
+                                        message: 'Please enter a valid slug',
+                                    },
+                                })}
+                            />
+                            <p className="font-bold tracking-wide text-red-500">{error && 'Slug already in use'}</p>
+                        </div>
                         <button onClick={generateSlug} className="rounded-md bg-gray-500 py-2 px-4 font-satoshi font-bold text-gray-200">
                             Randomize
                         </button>
