@@ -95,7 +95,7 @@ model HubLink {
 model ShortLink {
   id          String  @id @default(cuid())
   url         String  @db.Text
-  slug        String  
+  slug        String  @unique
   description String?
   owner       User    @relation(fields: [userId], references: [id])
 
