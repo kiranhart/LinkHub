@@ -77,7 +77,7 @@ model Hub {
   links        HubLink[]
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   userId    String
 }
 
@@ -87,7 +87,7 @@ model HubLink {
   url  String @db.Text
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   Hub       Hub?     @relation(fields: [hubId], references: [id])
   hubId     String?
 }
@@ -100,7 +100,7 @@ model ShortLink {
   owner       User    @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   userId    String
 
   @@index(slug)
