@@ -44,9 +44,10 @@ model User {
   email         String?     @unique
   emailVerified DateTime?
   image         String?
+  username      String?     @unique
   accounts      Account[]
   sessions      Session[]
-  defaultHub String?
+  defaultHub    String?
   Hub           Hub[]
   ShortLink     ShortLink[]
 }
@@ -62,10 +63,6 @@ model VerificationToken {
 /////////////////////////////
 //  actual page stuff now  //
 /////////////////////////////
-enum HubVisibility {
-  PUBLIC
-  PRIVATE
-}
 
 model Hub {
   id          String @id
@@ -73,8 +70,8 @@ model Hub {
   name        String
   description String
 
-  visbility    HubVisibility @default(PUBLIC)
-  adultContent Boolean       @default(false)
+  public       Boolean   @default(true)
+  adultContent Boolean   @default(false)
   links        HubLink[]
 
   createdAt DateTime @default(now())
