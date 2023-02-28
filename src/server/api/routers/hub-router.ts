@@ -31,4 +31,16 @@ export const hubRouter = createTRPCRouter({
 
         return foundHubs;
     }),
+
+    getHubById: publicProcedure.input(z.object({
+        id: z.string()
+    })).query(({ctx, input}) => {
+        const foundHub = ctx.prisma.hub.findUnique({
+            where: {
+                id: input.id
+            }
+        });
+
+        return foundHub;
+    }),
 });
