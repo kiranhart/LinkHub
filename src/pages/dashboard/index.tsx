@@ -1,7 +1,6 @@
 import { api } from '../../utils/api';
 import Link from 'next/link';
 import type { NextPage } from 'next';
-import Head from 'next/head';
 
 const Dashboard: NextPage = () => {
     const userHubs = api.hub.getHubs.useQuery();
@@ -13,7 +12,7 @@ const Dashboard: NextPage = () => {
                     <div className="rounded-md bg-white p-12 shadow-md">
                         <h2 className="text-xl font-black">No Hubs</h2>
                         <div className="text-3xl">Let&apos;s create your first hub</div>
-                        <button className="mt-2 rounded-md bg-black py-3 px-8 font-bold tracking-wide text-white">
+                        <button className="mt-2 rounded-md bg-black px-8 py-3 font-bold tracking-wide text-white">
                             <Link href="/dashboard/create-hub">Create Hub</Link>
                         </button>
                     </div>
