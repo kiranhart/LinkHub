@@ -65,5 +65,17 @@
   }
   body {
     @apply bg-background text-foreground;
+    @apply bg-slate-50 bg-[radial-gradient(#dbdde2_1px,transparent_1px)] [background-size:16px_16px]
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+      display: none;
   }
 }

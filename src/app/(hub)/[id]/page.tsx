@@ -1,4 +1,4 @@
-
+import HubCardLink from '@/components/HubCardLink';
 
 export default function HubPage({ params }: { params: { id: string } }) {
 	const hubLinks: HubLink[] = [
@@ -40,22 +40,14 @@ export default function HubPage({ params }: { params: { id: string } }) {
 				</div>
 				<div className='flex w-full flex-col gap-4'>
 					{hubLinks.map((link, index) => {
-						return <HubLink link={link} key={link.url} />;
+						return <HubCardLink link={link} key={link.url} />;
 					})}
 				</div>
 
-				<div className='rounded-full bg-black px-4 py-2 mb-4'>
+				<div className='mb-4 rounded-full bg-black px-4 py-2'>
 					<h3 className='inline-block bg-gradient-to-r from-blue-400 via-green-400 to-pink-500 bg-clip-text font-bold text-transparent'>Create your own hub</h3>
 				</div>
 			</div>
 		</div>
-	);
-}
-
-function HubLink({ link }: { link: HubLink }) {
-	return (
-		<a className='min-w-full rounded-md bg-white p-4 text-center font-bold' href={link.url}>
-			{link.name}
-		</a>
 	);
 }
