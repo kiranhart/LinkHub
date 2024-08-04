@@ -11,3 +11,23 @@ export const hubFormSchema = z.object({
 	public: z.boolean().default(true),
 	adult: z.boolean().default(false),
 });
+
+export const hubLinkSchema = z.object({
+	url: z.string().url({
+		message: 'You must provide a url',
+	}),
+	title: z.string().min(3, {
+		message: 'Enter a title for the link',
+	}),
+	adult: z.boolean().default(false),
+});
+
+export const hubHeaderSchema = z.object({
+	title: z.string().min(3, {
+		message: 'Enter a name for the header',
+	})
+});
+
+export type CreateHubSchema = z.infer<typeof hubFormSchema>;
+export type CreateHubLinkSchema = z.infer<typeof hubFormSchema>
+export type CreateHubHeaderSchema = z.infer<typeof hubHeaderSchema>

@@ -1,10 +1,9 @@
 'use client';
-import logoImage from '@/assets/logo-no-background.png';
 import { extractHubFromURL } from '@/lib/utils';
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 export default function Navbar() {
 	const path = usePathname();
@@ -46,26 +45,12 @@ export default function Navbar() {
 											style={{ color: 'transparent' }}
 										/>
 										<div className='flex items-center space-x-3 sm:flex'>
-											<span className='inline-block max-w-[100px] truncate text-sm font-medium sm:max-w-[200px]'>{user?.name}</span>
-											<span className='max-w-fit whitespace-nowrap rounded-full border border-black bg-black px-2 py-px text-xs font-medium capitalize text-white'>free</span>
+											<span className='inline-block max-w-[100px] truncate text-sm font-medium sm:max-w-[200px]'>{isBaseDashboard ? user?.name : currentHub}</span>
+											<span className='max-w-fit whitespace-nowrap rounded-full border border-black bg-black px-2 py-px text-xs font-medium capitalize text-white'>
+												{isBaseDashboard ? 'Dashboard' : 'free'}
+											</span>
 										</div>
 									</div>
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										width='24'
-										height='24'
-										viewBox='0 0 24 24'
-										fill='none'
-										stroke='currentColor'
-										strokeWidth='2'
-										strokeLinecap='round'
-										strokeLinejoin='round'
-										className='lucide lucide-chevrons-up-down h-4 w-4 text-gray-400'
-										aria-hidden='true'
-									>
-										<path d='m7 15 5 5 5-5'></path>
-										<path d='m7 9 5-5 5 5'></path>
-									</svg>
 								</button>
 							</div>
 						)}
@@ -97,13 +82,13 @@ export default function Navbar() {
 							</div>
 							{path === `/u/hub/${currentHub}` && <BottomLinkBorder />}
 						</Link>
-						<Link className='relative' href={`/u/hub/${currentHub}/appearance`}>
+						<Link className='relative' href={`/u/hub/${currentHub}/appearance`} prefetch>
 							<div className='mx-1 my-1.5 rounded-md px-3 py-1.5 transition-all duration-75 hover:bg-gray-100 active:bg-gray-200'>
 								<p className='text-sm text-gray-600 hover:text-black'>Appearance</p>
 							</div>
 							{path === `/u/hub/${currentHub}/appearance` && <BottomLinkBorder />}
 						</Link>
-						<Link className='relative' href={`/u/hub/${currentHub}/settings`}>
+						<Link className='relative' href={`/u/hub/${currentHub}/settings`} prefetch>
 							<div className='mx-1 my-1.5 rounded-md px-3 py-1.5 transition-all duration-75 hover:bg-gray-100 active:bg-gray-200'>
 								<p className='text-sm text-gray-600 hover:text-black'>Settings</p>
 							</div>

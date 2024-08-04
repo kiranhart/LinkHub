@@ -1,6 +1,6 @@
 'use client';
 
-import HubCardLink from '@/components/HubCardLink';
+import HubCardLink from '@/components/hub/HubCardLink';
 import { Prisma } from '@prisma/client';
 import { useEffect } from 'react';
 

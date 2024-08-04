@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -11,21 +11,15 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Hub } from '@/types/hub.types';
-
-const hubLinkSchema = z.object({
-	url: z.string().url({
-		message: 'You must provide a url',
-	}),
-	title: z.string().min(3, {
-		message: 'Enter a title for the link',
-	}),
-	adult: z.boolean().default(false),
-});
+import { hubLinkSchema } from '@/lib/validate';
+import { useCreateHubLinkMutation } from './mutations';
+import LoadingButton from '@/components/LoadingButton';
+import { Hub } from '@prisma/client';
 
 export default function CreateHubLink({ hub }: { hub: Hub }) {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
+	const mutation = useCreateHubLinkMutation();
 
 	const form = useForm<z.infer<typeof hubLinkSchema>>({
 		resolver: zodResolver(hubLinkSchema),
@@ -37,19 +31,43 @@ export default function CreateHubLink({ hub }: { hub: Hub }) {
 	});
 
 	function onSubmit(values: z.infer<typeof hubLinkSchema>) {
-		hub.links?.push({
-			name: values.title,
-			url: values.url,
-			adult: values.adult,
+		mutation.mutate({
+			data: values,
+			hubId: hub.username
+		}, {
+			onSuccess: () => {
+				form.reset();
+				form.clearErrors();
+
+				setOpen(false);
+				toast.success('Succesfully created link');
+			},
 		});
 		setOpen(false);
 	}
 
+	function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+		if (e.key === 'c') {
+			setOpen(true);
+			e.preventDefault();
+		}
+	}
+
+	useEffect(() => {
+		document.addEventListener('keydown', handleKeyPress);
+		return function () {
+			document.removeEventListener('keydown', handleKeyPress);
+		};
+	}, []);
+
 	return (
 		<Credenza open={open} onOpenChange={setOpen}>
 			<CredenzaTrigger asChild>
-				<Button className='w-full' variant={'success'}>
-					Add Link
+				<Button className='group flex h-10 w-full items-center justify-center gap-2 whitespace-nowrap rounded-md border border-black bg-black px-4 text-sm text-white transition-all hover:bg-gray-800 hover:ring-4 hover:ring-gray-200'>
+					<div className='flex-1 text-left'>Create link</div>
+					<kbd className='hidden rounded bg-gray-700 px-2 py-0.5 text-xs font-light text-gray-400 transition-all duration-75 group-hover:bg-gray-600 group-hover:text-gray-300 md:inline-block'>
+						C
+					</kbd>
 				</Button>
 			</CredenzaTrigger>
 			<CredenzaContent className='sm:max-w-[425px]'>
@@ -103,9 +121,9 @@ export default function CreateHubLink({ hub }: { hub: Hub }) {
 									</FormItem>
 								)}
 							/>
-							<Button className='w-full' type='submit'>
-								Submit
-							</Button>
+							<LoadingButton className='w-full' type='submit' disabled={mutation.isPending} loading={mutation.isPending}>
+								Add
+							</LoadingButton>
 						</form>
 					</Form>
 				</CredenzaBody>

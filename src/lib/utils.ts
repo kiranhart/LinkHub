@@ -11,3 +11,7 @@ export function extractHubFromURL(url: string): string {
   const match = url.match(regex);
   return match ? match[1] : '';
 }
+
+export function capitalizeFirstLetter(string: string): string {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

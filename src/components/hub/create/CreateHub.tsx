@@ -1,7 +1,7 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -13,25 +13,37 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { hubFormSchema } from '@/lib/validate';
-import { createHub } from '@/app/server/hub/actions';
-import { create } from 'domain';
+import { revalidatePath } from 'next/cache';
+import { useCreateHubMutation } from './mutations';
+import LoadingButton from '@/components/LoadingButton';
 
 export default function CreateHub() {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
+	const mutation = useCreateHubMutation();
 
 	const form = useForm<z.infer<typeof hubFormSchema>>({
 		resolver: zodResolver(hubFormSchema),
 		defaultValues: {
 			username: '',
 			name: '',
-			description: '',
+			description: 'Welcome to my hub',
 			public: true,
 			adult: false,
 		},
 	});
 
-	function onSubmit(values: z.infer<typeof hubFormSchema>) {}
+	function onSubmit(values: z.infer<typeof hubFormSchema>) {
+		mutation.mutate(values, {
+			onSuccess: () => {
+				form.reset();
+				form.clearErrors();
+
+				setOpen(false);
+				toast.success('Created your new Hub');
+			},
+		});
+	}
 
 	return (
 		<Credenza open={open} onOpenChange={setOpen}>
@@ -118,17 +130,13 @@ export default function CreateHub() {
 									</FormItem>
 								)}
 							/>
-							<Button className='w-full' type='submit'>
+							<LoadingButton className='w-full' type='submit' loading={mutation.isPending} disabled={mutation.isPending}>
 								Create
-							</Button>
+							</LoadingButton>
 						</form>
 					</Form>
 				</CredenzaBody>
-				<CredenzaFooter>
-					{/* <CredenzaClose asChild>
-						<button>Close</button>
-					</CredenzaClose> */}
-				</CredenzaFooter>
+				<CredenzaFooter></CredenzaFooter>
 			</CredenzaContent>
 		</Credenza>
 	);

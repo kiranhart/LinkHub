@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/sonner';
 import Navbar from '@/components/Navbar';
+import ReactQueryProvider from './ReactQueryProvider';
 
 const fontSans = FontSans({
 	subsets: ['latin'],
@@ -17,8 +18,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
 			<head />
 			<body className={cn('mx-auto flex min-h-[100vh] flex-col bg-background font-sans antialiased', fontSans.variable)}>
 				<SessionProvider>
-					{children}
-					<Toaster />
+					<ReactQueryProvider>
+						{children}
+						<Toaster />
+					</ReactQueryProvider>
 				</SessionProvider>
 			</body>
 		</html>

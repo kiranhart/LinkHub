@@ -5,11 +5,20 @@ import type { NextAuthConfig } from "next-auth"
 export default {
   providers: [Discord],
   callbacks: {
-    jwt({ token, user }) {
-        if (user) { // User is available during sign-in
-          token.id = user.id
-        }
-        return token
-      },
-  }
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+    jwt: async ({ user, token }) => {
+      if (user) {
+        token.uid = user.id;
+      }
+      return token;
+    },
+  },
+  session: {
+    strategy: 'jwt',
+  },
 } satisfies NextAuthConfig

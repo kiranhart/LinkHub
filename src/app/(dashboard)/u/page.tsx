@@ -1,6 +1,6 @@
-import CreateHub from '@/components/CreateHub';
-import HubCard from '@/components/HubCard';
-import HubList from '@/components/HubList';
+import CreateHub from '@/components/hub/create/CreateHub';
+import HubCard from '@/components/hub/HubCard';
+import HubList from '@/components/hub/HubList';
 import { Button } from '@/components/ui/button';
 import { Hub } from '@prisma/client';
 
@@ -18,9 +18,7 @@ export default function DashboardHome() {
 				<CreateHub />
 			</div>
 			<hr className='my-4' />
-			{/* <div>You do not have any hubs. Please create one first.</div> */}
 			<HubList />
 		</div>
 	);
 }
-
