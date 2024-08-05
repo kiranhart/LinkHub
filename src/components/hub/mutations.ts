@@ -1,6 +1,6 @@
 import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { deleteHub } from './actions';
+import { deleteHub, updateHubDisplayName, updateHubUsername } from './actions';
 import { usePathname, useRouter } from 'next/navigation';
 import { Hub } from '@prisma/client';
 
@@ -24,6 +24,51 @@ export function useDeleteHubMutation() {
         onError(error) {
             console.log(error);
             toast.error('Failed to delete Hub. Please try again')
+        }
+    })
+
+    return mutation;
+}
+
+export function useUpdateHubDisplayName() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: updateHubDisplayName,
+        onSuccess: (updatedHub) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub-edit', 'hub-data']}
+            queryClient.invalidateQueries(queryFilter)
+            toast.success("Successfully changed display name")      
+        },
+        onError(error) {
+            console.log(error);
+            toast.error('Failed to update display name. Please try again')
+        }
+    })
+
+    return mutation;
+}
+
+export function useUpdateHubUsername() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: updateHubUsername,
+        onSuccess: (updatedHub) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub-edit', 'hub-data']}
+            queryClient.invalidateQueries(queryFilter)
+            router.push(`/u/hub/${updatedHub.username}/settings`)
+            toast.success("Successfully changed hub username")      
+        },
+        onError(error) {
+            console.log(error);
+            toast.error('Failed to update username. Please try again')
         }
     })
 

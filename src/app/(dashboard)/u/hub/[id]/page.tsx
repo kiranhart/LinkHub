@@ -1,7 +1,6 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import { Hub, HubContent, Prisma } from '@prisma/client';
-import { getHub } from '@/components/hub/actions';
 
 import { ChevronDown, SlidersHorizontal } from 'lucide-react';
 import CreateHubLink from '@/components/hub/create/CreateHubLink';

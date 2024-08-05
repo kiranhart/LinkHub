@@ -10,8 +10,8 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import LoadingButton from '../LoadingButton';
-import { useDeleteHubMutation } from './mutations';
+import LoadingButton from '@/components/LoadingButton';
+import { useDeleteHubMutation } from '@/components/hub/mutations';
 
 interface DeleteHubDialogProps {
 	hub: Hub;
