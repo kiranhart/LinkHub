@@ -67,8 +67,7 @@ export function useUpdateHubUsername() {
             toast.success("Successfully changed hub username")      
         },
         onError(error) {
-            console.log(error);
-            toast.error('Failed to update username. Please try again')
+            toast.error('Hub username taken, try another name.')
         }
     })
 

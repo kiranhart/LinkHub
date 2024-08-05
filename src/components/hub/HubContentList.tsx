@@ -44,6 +44,7 @@ function ContentCard({ content }: { content: HubContent }) {
 			</div>
 			<div className='flex w-auto gap-2'>
 				<Badge variant={content.active ? '' : 'destructive'}>{content.active ? 'Active' : 'Private'}</Badge>
+				{content.type === 'link' && <Badge variant={content.adult ? 'destructive' : 'success'}>{content.adult ? 'NSFW' : 'SFW'}</Badge>}
 				{content.type === 'link' && <Badge variant={'outline'}>{content.clicks?.toFixed} Clicks</Badge>}
 				<div className='flex items-center gap-2'>
 					<Pen size={16} className='text-gray-600' />
