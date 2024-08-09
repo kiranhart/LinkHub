@@ -138,3 +138,17 @@ export async function updateHubContentOrder({ username, newOrder }: {  username:
 
     return updatedHub;
 }
+
+export async function canUserAccessHub({ username } : { username: string}) {
+    const session = await getSession();
+    if (!session.user) return false
+    
+    const hub = await db.hub.findUnique({
+        where: {
+            username: username.toLowerCase()
+        }
+    })
+
+    if (!hub) return false
+    return hub.userId === session.user?.id
+}

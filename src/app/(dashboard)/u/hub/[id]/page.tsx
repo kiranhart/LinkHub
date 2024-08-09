@@ -2,19 +2,19 @@
 import { Button } from '@/components/ui/button';
 import { Hub, HubContent, Prisma } from '@prisma/client';
 
-import { ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, Router, SlidersHorizontal } from 'lucide-react';
 import CreateHubLink from '@/components/hub/create/CreateHubLink';
 import CreateHubHeader from '@/components/hub/create/CreateHubHeader';
 import HubContentList from '@/components/hub/HubContentList';
-import { redirect } from 'next/navigation';
 
 import ky from 'ky';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { canUserAccessHub } from '@/components/hub/actions';
 
 export default function HubEditPage({ params }: { params: { id: string } }) {
 	// TODO check if they even own the hub
-	// const hub = await getHub({ username: params.id });
 	const hubQuery = useQuery<Hub[]>({
 		queryKey: ['hub', 'hub-data'],
 		queryFn: async () => ky.get(`/api/hub/${params.id}`).json<Hub[]>(),
