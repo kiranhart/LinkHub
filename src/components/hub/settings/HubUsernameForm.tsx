@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useUpdateHubUsername } from '@/components/hub/mutations';
 import { useForm } from 'react-hook-form';
+import LoadingButton from '@/components/LoadingButton';
+import { toast } from 'sonner';
 
 export default function HubUsernameForm({ hub }: { hub: Hub }) {
 	const mutation = useUpdateHubUsername();
@@ -25,6 +27,11 @@ export default function HubUsernameForm({ hub }: { hub: Hub }) {
 	});
 
 	function onSubmit(values: z.infer<typeof usernameSchema>) {
+		if (values.username === hub.username) {
+			toast.error('Cannot use same username...');
+			return;
+		}
+
 		mutation.mutate({
 			username: hub.username,
 			newUsername: values.username,
@@ -32,7 +39,7 @@ export default function HubUsernameForm({ hub }: { hub: Hub }) {
 	}
 
 	return (
-		<Card>
+		<Card id='username'>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<CardHeader>
@@ -59,9 +66,9 @@ export default function HubUsernameForm({ hub }: { hub: Hub }) {
 					</CardContent>
 					<CardFooter className='flex justify-between border-t bg-gray-100/80 pb-4 pt-3'>
 						<p className='text-sm text-gray-500'>Only lowercase letters, numbers, and dashes. Max 48 characters</p>
-						<Button variant={'outline'} type='submit'>
+						<LoadingButton variant={'outline'} type='submit' loading={mutation.isPending} disabled={mutation.isPending}>
 							Save Changes
-						</Button>
+						</LoadingButton>
 					</CardFooter>
 				</form>
 			</Form>

@@ -11,7 +11,7 @@ export async function deleteHub({ username }: { username: string }) {
     
     const hub = await db.hub.findUnique({
         where: {
-            username
+            username: username.toLowerCase()
         }
     })
 
@@ -28,13 +28,35 @@ export async function deleteHub({ username }: { username: string }) {
 }
 
 
+export async function deleteContent({ contentId }: { hubUsername: string, linkId: string}) {
+    const session = await getSession();
+    if (!session.user) throw new Error("Unauthorized");
+    
+    const content = await db.hubContent.findUnique({
+        where: {
+            id: contentId
+        }
+    })
+
+    if (!content) throw new Error("Hub not found");
+    if (content.userId !== session.user?.id) throw new Error("Unauthorized");
+   
+    const deletedContent = await db.hubContent.delete({
+        where: {
+            id: contentId
+        },
+    });
+
+    return deletedContent;
+}
+
 export async function updateHubDisplayName({ username, newDisplayName }: {  username: string, newDisplayName: string}) {
     const session = await getSession();
     if (!session.user) throw new Error("Unauthorized");
     
     const hub = await db.hub.findUnique({
         where: {
-            username
+            username: username.toLowerCase()
         }
     })
 
@@ -46,7 +68,7 @@ export async function updateHubDisplayName({ username, newDisplayName }: {  user
             name: newDisplayName
         },
         where: {
-            username
+            username: username.toLowerCase()
         }
     })
 
@@ -61,7 +83,7 @@ export async function updateHubUsername({ username, newUsername }: {  username: 
     
     const hub = await db.hub.findUnique({
         where: {
-            username
+            username: username.toLowerCase()
         }
     })
 
@@ -71,10 +93,10 @@ export async function updateHubUsername({ username, newUsername }: {  username: 
     try {
         const updatedHub = await db.hub.update({
             data: {
-                username: newUsername
+                username: newUsername.toLowerCase()
             },
             where: {
-                username
+                username: username.toLowerCase()
             }
         })
 
@@ -89,4 +111,30 @@ export async function updateHubUsername({ username, newUsername }: {  username: 
         throw error
     }
 
+}
+
+export async function updateHubContentOrder({ username, newOrder }: {  username: string, newOrder: string}) {
+    const session = await getSession();
+    if (!session.user) throw new Error("Unauthorized");
+    
+    const hub = await db.hub.findUnique({
+        where: {
+            username: username.toLowerCase()
+        }
+    })
+
+    if (!hub) throw new Error("Hub not found");
+    if (hub.userId !== session.user?.id) throw new Error("Unauthorized");
+
+    const updatedHub = await db.hub.update({
+        data: {
+            contentOrder: newDisplayName
+        },
+        where: {
+            username: username.toLowerCase()
+        }
+    })
+
+
+    return updatedHub;
 }

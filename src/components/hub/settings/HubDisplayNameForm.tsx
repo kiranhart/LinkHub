@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useUpdateHubDisplayName } from '@/components/hub/mutations';
 import { useForm } from 'react-hook-form';
+import LoadingButton from '@/components/LoadingButton';
 
 export default function HubDisplayNameForm({ hub }: { hub: Hub }) {
 	const mutation = useUpdateHubDisplayName();
@@ -39,7 +40,7 @@ export default function HubDisplayNameForm({ hub }: { hub: Hub }) {
 	}
 
 	return (
-		<Card>
+		<Card id="displayname">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<CardHeader>
@@ -66,9 +67,9 @@ export default function HubDisplayNameForm({ hub }: { hub: Hub }) {
 					</CardContent>
 					<CardFooter className='flex justify-between border-t bg-gray-100/80 pb-4 pt-3'>
 						<p className='text-sm text-gray-500'>Max 32 characters</p>
-						<Button variant={'outline'} type='submit'>
+						<LoadingButton variant={'outline'} type='submit' loading={mutation.isPending} disabled={mutation.isPending}>
 							Save Changes
-						</Button>
+						</LoadingButton>
 					</CardFooter>
 				</form>
 			</Form>

@@ -1,6 +1,6 @@
 import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { deleteHub, updateHubDisplayName, updateHubUsername } from './actions';
+import { deleteHub, updateHubContentOrder, updateHubDisplayName, updateHubUsername } from './actions';
 import { usePathname, useRouter } from 'next/navigation';
 import { Hub } from '@prisma/client';
 
@@ -63,11 +63,31 @@ export function useUpdateHubUsername() {
         onSuccess: (updatedHub) => {
             const queryFilter: QueryFilters = { queryKey: ['hub-edit', 'hub-data']}
             queryClient.invalidateQueries(queryFilter)
-            router.push(`/u/hub/${updatedHub.username}/settings`)
+            router.push(`/u/hub/${updatedHub.username}/settings#username`)
             toast.success("Successfully changed hub username")      
         },
         onError(error) {
             toast.error('Hub username taken, try another name.')
+        }
+    })
+
+    return mutation;
+}
+
+export function useUpdateHubContentOrder() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: updateHubContentOrder,
+        onSuccess: (updatedHub) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub-edit', 'hub-data']}
+            queryClient.invalidateQueries(queryFilter)
+        },
+        onError(error) {
+            toast.error('something went wrong while updating link order.')
         }
     })
 

@@ -15,6 +15,8 @@ import { hubLinkSchema } from '@/lib/validate';
 import { useCreateHubLinkMutation } from './mutations';
 import LoadingButton from '@/components/LoadingButton';
 import { Hub } from '@prisma/client';
+import NSFW_LINKS from '@/lib/nsfw_domains';
+import { isNSFWDomain } from '@/lib/utils';
 
 export default function CreateHubLink({ hub }: { hub: Hub }) {
 	const router = useRouter();
@@ -31,34 +33,37 @@ export default function CreateHubLink({ hub }: { hub: Hub }) {
 	});
 
 	function onSubmit(values: z.infer<typeof hubLinkSchema>) {
-		mutation.mutate({
-			data: values,
-			hubId: hub.username
-		}, {
-			onSuccess: () => {
-				form.reset();
-				form.clearErrors();
-
-				setOpen(false);
-				toast.success('Succesfully created link');
+		mutation.mutate(
+			{
+				data: values,
+				hubId: hub.username,
 			},
-		});
+			{
+				onSuccess: () => {
+					form.reset();
+					form.clearErrors();
+
+					setOpen(false);
+					toast.success('Succesfully created link');
+				},
+			},
+		);
 		setOpen(false);
 	}
 
-	function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
-		if (e.key === 'c') {
-			setOpen(true);
-			e.preventDefault();
-		}
-	}
+	// function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
+	// 	if (e.key === 'c') {
+	// 		setOpen(true);
+	// 		e.preventDefault();
+	// 	}
+	// }
 
-	useEffect(() => {
-		document.addEventListener('keydown', handleKeyPress);
-		return function () {
-			document.removeEventListener('keydown', handleKeyPress);
-		};
-	}, []);
+	// useEffect(() => {
+	// 	document.addEventListener('keydown', handleKeyPress);
+	// 	return function () {
+	// 		document.removeEventListener('keydown', handleKeyPress);
+	// 	};
+	// }, []);
 
 	return (
 		<Credenza open={open} onOpenChange={setOpen}>
@@ -85,7 +90,13 @@ export default function CreateHubLink({ hub }: { hub: Hub }) {
 									<FormItem>
 										<FormLabel>URL</FormLabel>
 										<FormControl>
-											<Input placeholder='http://your-link.com' {...field} />
+											<Input
+												placeholder='http://your-link.com'
+												{...field}
+												onChangeCapture={(e) => {
+													form.setValue('adult', isNSFWDomain(e.currentTarget.value.trim()));
+												}}
+											/>
 										</FormControl>
 										<FormDescription>This is the link users will be redirected to.</FormDescription>
 										<FormMessage />

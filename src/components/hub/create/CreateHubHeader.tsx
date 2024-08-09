@@ -13,10 +13,12 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Hub } from '@/types/hub.types';
 import { hubHeaderSchema } from '@/lib/validate';
+import { useCreateHubHeaderMutation } from './mutations';
 
 export default function CreateHubHeader({ hub }: { hub: Hub }) {
 	const router = useRouter();
 	const [open, setOpen] = useState(false);
+	const mutation = useCreateHubHeaderMutation();
 
 	const form = useForm<z.infer<typeof hubHeaderSchema>>({
 		resolver: zodResolver(hubHeaderSchema),
@@ -26,27 +28,22 @@ export default function CreateHubHeader({ hub }: { hub: Hub }) {
 	});
 
 	function onSubmit(values: z.infer<typeof hubHeaderSchema>) {
-		hub.links?.push({
-			title: values.title,
-		});
-
+		mutation.mutate(
+			{
+				data: values,
+				hubId: hub.username,
+			},
+			{
+				onSuccess: () => {
+					form.reset();
+					form.clearErrors();
+					setOpen(false);
+					toast.success('Succesfully created header');
+				},
+			},
+		);
 		setOpen(false);
 	}
-
-	function handleKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
-		if (e.key === 'h') {
-			setOpen(true);
-			e.preventDefault();
-		}
-	}
-
-	useEffect(() => {
-		document.addEventListener('keydown', handleKeyPress);
-		return function () {
-			document.removeEventListener('keydown', handleKeyPress);
-		};
-	}, []);
-
 	return (
 		<Credenza open={open} onOpenChange={setOpen}>
 			<CredenzaTrigger asChild>

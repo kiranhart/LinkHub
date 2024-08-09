@@ -10,6 +10,7 @@ import { redirect } from 'next/navigation';
 
 import ky from 'ky';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export default function HubEditPage({ params }: { params: { id: string } }) {
 	// TODO check if they even own the hub
@@ -57,7 +58,7 @@ export default function HubEditPage({ params }: { params: { id: string } }) {
 				<div className='w-full overflow-hidden'>
 					<div className='h-max'>
 						{contentQuery.isLoading && <div>Fucking loading</div>}
-						{contentQuery.data && <HubContentList contentList={contentQuery.data} />}
+						{contentQuery.data && <HubContentList parentHub={params.id} contentList={contentQuery.data} />}
 					</div>
 				</div>
 			</div>

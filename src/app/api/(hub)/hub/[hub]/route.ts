@@ -12,9 +12,11 @@ export async function GET(
             return Response.json({ error: 'Unauthorized'}, { status: 401 })
         }
         
+        const hubUsername = params.hub.toLowerCase();
+
         const hub = await db.hub.findUnique({
             where: {
-                username: params.hub
+                username: hubUsername
             },
             include: {
                 content: false

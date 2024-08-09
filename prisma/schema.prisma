@@ -14,11 +14,13 @@ model HubContent {
     link   String?
     clicks Int?    @default(0)
 
-    owningHub Hub @relation(fields: [hubId], references: [id], onDelete: Cascade)
+    owningHub   Hub  @relation(fields: [hubId], references: [id], onDelete: Cascade)
+    createdUser User @relation(fields: [userId], references: [id])
 
     active Boolean @default(true)
     adult  Boolean @default(false)
     hubId  String
+    userId String
 }
 
 model Hub {
@@ -48,6 +50,8 @@ model Hub {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    @@index(username)
 }
 
 model User {
@@ -61,9 +65,10 @@ model User {
     // Optional for WebAuthn support
     Authenticator Authenticator[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    Hub       Hub[]
+    createdAt  DateTime     @default(now())
+    updatedAt  DateTime     @updatedAt
+    Hub        Hub[]
+    HubContent HubContent[]
 }
 
 model Account {
