@@ -28,7 +28,7 @@ export async function deleteHub({ username }: { username: string }) {
 }
 
 
-export async function deleteContent({ contentId }: { hubUsername: string, linkId: string}) {
+export async function deleteContent({ contentId }: { contentId: string}) {
     const session = await getSession();
     if (!session.user) throw new Error("Unauthorized");
     
@@ -38,7 +38,7 @@ export async function deleteContent({ contentId }: { hubUsername: string, linkId
         }
     })
 
-    if (!content) throw new Error("Hub not found");
+    if (!content) throw new Error("Hub content not found");
     if (content.userId !== session.user?.id) throw new Error("Unauthorized");
    
     const deletedContent = await db.hubContent.delete({
@@ -76,6 +76,31 @@ export async function updateHubDisplayName({ username, newDisplayName }: {  user
     return updatedHub;
 }
 
+export async function updateHubBio({ username, bio }: {  username: string, bio: string}) {
+    const session = await getSession();
+    if (!session.user) throw new Error("Unauthorized");
+    
+    const hub = await db.hub.findUnique({
+        where: {
+            username: username.toLowerCase()
+        }
+    })
+
+    if (!hub) throw new Error("Hub not found");
+    if (hub.userId !== session.user?.id) throw new Error("Unauthorized");
+
+    const updatedHub = await db.hub.update({
+        data: {
+            description: bio
+        },
+        where: {
+            username: username.toLowerCase()
+        }
+    })
+
+
+    return updatedHub;
+}
 
 export async function updateHubUsername({ username, newUsername }: {  username: string, newUsername: string}) {
     const session = await getSession();
@@ -128,7 +153,7 @@ export async function updateHubContentOrder({ username, newOrder }: {  username:
 
     const updatedHub = await db.hub.update({
         data: {
-            contentOrder: newDisplayName
+            contentOrder: newOrder
         },
         where: {
             username: username.toLowerCase()

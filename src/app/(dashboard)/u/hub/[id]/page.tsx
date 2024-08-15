@@ -31,21 +31,6 @@ export default function HubEditPage({ params }: { params: { id: string } }) {
 			<div className='mx-auto flex w-full max-w-screen-xl flex-col gap-y-3 px-2.5 lg:px-20'>
 				<div className='flex flex-wrap items-center justify-between gap-2 md:flex-nowrap'>
 					<h1 className='order-1 text-2xl font-semibold tracking-tight text-black'>Links</h1>
-					<div className='order-4 flex w-full grow flex-wrap justify-end gap-2 md:order-2 md:w-auto'>
-						<div className='grow-basis-0 md:grow-0'>
-							<Button variant={'outline'}>
-								<div>
-									<div className='flex w-full items-center gap-2'>
-										<div className='relative-shrink-0'>
-											<SlidersHorizontal className='text-gray-40' size={16} />
-										</div>
-										<div className='grow text-left'>Display</div>
-										<ChevronDown className='text-gray-400' size={16} />
-									</div>
-								</div>
-							</Button>
-						</div>
-					</div>
 					<div className='order-3 flex gap-x-2'>
 						<div className='grow-0'>
 							<CreateHubLink hub={hubQuery?.data} />
@@ -70,7 +55,7 @@ export default function HubEditPage({ params }: { params: { id: string } }) {
 					{/* Spacing */}
 					<div className='h-[90px]'></div>
 					{/* Footer */}
-					<LinksNavigation />
+					{/* <LinksNavigation /> */}
 				</div>
 			</div>
 		</div>

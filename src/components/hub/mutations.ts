@@ -1,6 +1,6 @@
 import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { deleteHub, updateHubContentOrder, updateHubDisplayName, updateHubUsername } from './actions';
+import { deleteHub, updateHubBio, updateHubContentOrder, updateHubDisplayName, updateHubUsername, deleteContent } from './actions';
 import { usePathname, useRouter } from 'next/navigation';
 import { Hub } from '@prisma/client';
 
@@ -30,6 +30,28 @@ export function useDeleteHubMutation() {
     return mutation;
 }
 
+export function useDeleteHubContentMutation() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: deleteContent,
+        onSuccess: (deletedContent) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub', 'hub-content']}
+            queryClient.invalidateQueries(queryFilter)
+            toast.success("Successfully deleted content")
+        },
+        onError(error) {
+            console.log(error);
+            toast.error('Failed to delete content. Please try again')
+        }
+    })
+
+    return mutation;
+}
+
 export function useUpdateHubDisplayName() {
     const queryClient = useQueryClient();
 
@@ -46,6 +68,28 @@ export function useUpdateHubDisplayName() {
         onError(error) {
             console.log(error);
             toast.error('Failed to update display name. Please try again')
+        }
+    })
+
+    return mutation;
+}
+
+export function useUpdateHubBio() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: updateHubBio,
+        onSuccess: (updatedHub) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub-edit', 'hub-data']}
+            queryClient.invalidateQueries(queryFilter)
+            toast.success("Successfully changed description")      
+        },
+        onError(error) {
+            console.log(error);
+            toast.error('Failed to update description. Please try again')
         }
     })
 

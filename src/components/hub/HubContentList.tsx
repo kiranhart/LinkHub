@@ -2,20 +2,30 @@
 import { cn } from '@/lib/utils';
 import { ContentWithOrder, HubAndContent } from '@/types/types';
 import { HubContent } from '@prisma/client';
-import { CornerDownRight, GrabIcon, Grip, Pen, Trash } from 'lucide-react';
-import { Avatar, AvatarImage } from '../ui/avatar';
-import { Badge } from '../ui/badge';
+import { CornerDownRight, GrabIcon, Grip, Pen } from 'lucide-react';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { useEffect, useRef, useState } from 'react';
 
-import { DndContext, closestCenter } from '@dnd-kit/core';
+import { DndContext, closestCenter, KeyboardSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useUpdateHubContentOrder } from './mutations';
+import { useDeleteHubContentMutation, useUpdateHubContentOrder } from './mutations';
 import { toast } from 'sonner';
+import HubContentDeleteDialog from './settings/HubContentDeleteDialog';
 
 export default function HubContentList({ parentHub, contentList }) {
 	const [content, setContent] = useState(contentList.content);
 	const previousOrder = useRef(contentList.content.map((content) => content.id).join('|'));
+
+	const mouseSensor = useSensor(MouseSensor, {
+		activationConstraint: {
+			distance: 10, // Enable sort function when dragging 10px   💡 here!!!
+		},
+	});
+
+	const keyboardSensor = useSensor(KeyboardSensor);
+	const sensors = useSensors(mouseSensor, keyboardSensor);
 
 	const mutation = useUpdateHubContentOrder();
 
@@ -53,7 +63,7 @@ export default function HubContentList({ parentHub, contentList }) {
 	}, [contentList]);
 
 	return (
-		<DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+		<DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
 			<SortableContext items={content} strategy={verticalListSortingStrategy}>
 				<div className='flex w-full flex-wrap items-start gap-4 sm:flex-nowrap sm:items-center'>
 					<div className='mt-5 flex grow flex-col gap-4'>
@@ -69,6 +79,7 @@ export default function HubContentList({ parentHub, contentList }) {
 
 function ContentCard({ id, content }: { id: string; content: HubContent }) {
 	const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+	const mutation = useDeleteHubContentMutation();
 
 	const style = {
 		transform: CSS.Transform.toString(transform),
@@ -105,7 +116,7 @@ function ContentCard({ id, content }: { id: string; content: HubContent }) {
 					{content.type === 'link' && <Badge variant={'outline'}>{content.clicks?.toFixed()} Clicks</Badge>}
 					<div className='flex items-center gap-2'>
 						<Pen size={16} className='text-gray-600' />
-						<Trash size={16} className='text-gray-600' />
+						{content && <HubContentDeleteDialog content={content} />}
 					</div>
 				</div>
 			</div>
