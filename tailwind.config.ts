@@ -28,6 +28,9 @@ export default withUt({
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       colors: {
+        bg: '#dfe5f2',
+        text: '#000',
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -80,6 +83,12 @@ export default withUt({
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      translate: {
+        boxShadowX: '4px',
+        boxShadowY: '4px',
+        reverseBoxShadowX: '-4px',
+        reverseBoxShadowY: '-4px',
       },
     },
   },

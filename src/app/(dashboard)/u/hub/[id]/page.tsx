@@ -12,6 +12,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { canUserAccessHub } from '@/components/hub/actions';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function HubEditPage({ params }: { params: { id: string } }) {
 	// TODO check if they even own the hub
@@ -42,7 +43,19 @@ export default function HubEditPage({ params }: { params: { id: string } }) {
 				</div>
 				<div className='w-full overflow-hidden'>
 					<div className='h-max'>
-						{contentQuery.isLoading && <div>Fucking loading</div>}
+						{contentQuery.isLoading && (
+							<div className='flex w-full flex-wrap items-start gap-4 sm:flex-nowrap sm:items-center'>
+								<div className='mt-5 flex grow flex-col gap-4'>
+									<Skeleton className='h-[50px] w-full bg-slate-200'></Skeleton>
+									<Skeleton className='h-[70px] w-full bg-slate-200'></Skeleton>
+									<Skeleton className='h-[70px] w-full bg-slate-200'></Skeleton>
+									<Skeleton className='h-[50px] w-full bg-slate-200'></Skeleton>
+									<Skeleton className='h-[70px] w-full bg-slate-200'></Skeleton>
+									<Skeleton className='h-[70px] w-full bg-slate-200'></Skeleton>
+									<Skeleton className='h-[70px] w-full bg-slate-200'></Skeleton>
+								</div>
+							</div>
+						)}
 						{contentQuery.data && <HubContentList parentHub={params.id} contentList={contentQuery.data} />}
 					</div>
 				</div>

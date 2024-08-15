@@ -112,3 +112,10 @@ export function generateLinearGradient(hex: string, direction: 'top-to-bottom' |
   const gradientDirection = direction === 'top-to-bottom' ? 'to bottom' : 'to top';
   return `linear-gradient(${gradientDirection}, ${lighterHex}, ${hex})`;
 }
+
+export function getNormalizedLinkStyleName(dbName: string): string {
+   switch(dbName) {
+    case 'fill_rounded':
+      return 'fillRounded';
+  }
+}
