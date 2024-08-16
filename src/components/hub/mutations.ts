@@ -1,6 +1,6 @@
 import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { deleteHub, updateHubBio, updateHubContentOrder, updateHubDisplayName, updateHubUsername, deleteContent } from './actions';
+import { deleteHub, updateHubBio, updateHubContentOrder, updateHubDisplayName, updateHubUsername, deleteContent, updateHubContentStyle } from './actions';
 import { usePathname, useRouter } from 'next/navigation';
 import { Hub } from '@prisma/client';
 
@@ -68,6 +68,28 @@ export function useUpdateHubDisplayName() {
         onError(error) {
             console.log(error);
             toast.error('Failed to update display name. Please try again')
+        }
+    })
+
+    return mutation;
+}
+
+export function useUpdateHubContentStyle() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: updateHubContentStyle,
+        onSuccess: (updatedHub) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub', 'hub-data']}
+            queryClient.invalidateQueries(queryFilter)
+            toast.success("Successfully changed content style")      
+        },
+        onError(error) {
+            console.log(error);
+            toast.error('Failed to update style. Please try again')
         }
     })
 

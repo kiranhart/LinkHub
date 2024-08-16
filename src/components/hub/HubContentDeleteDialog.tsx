@@ -51,6 +51,7 @@ export default function HubContentDeleteDialog({ content }: DeleteContentDialogP
 						Delete
 					</LoadingButton>
 				</CredenzaBody>
+				<CredenzaFooter></CredenzaFooter>
 			</CredenzaContent>
 		</Credenza>
 	);

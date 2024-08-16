@@ -3,6 +3,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Hub } from '@prisma/client';
 import { HubContentItem } from '../HubContentItem';
 import { getNormalizedLinkStyleName } from '@/lib/utils';
+import LinkStyleDialog from '@/components/hub/appearance/LinkStyleDialog';
+import ContentStylePreview from './ContentStylePreview';
 
 export default function LinkStyleForm({ hub }: { hub: Hub }) {
 	return (
@@ -11,15 +13,16 @@ export default function LinkStyleForm({ hub }: { hub: Hub }) {
 				<CardTitle className='text-xl font-medium'>Header/Link Styling</CardTitle>
 				<p className='text-sm text-gray-500'>How should your header/links be styled?</p>
 			</CardHeader>
-			<CardContent className='flex flex-col gap-4'>
-				<div className='flex flex-col gap-4'>
-					<div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
-						<HubContentItem className='grid place-items-center'>Style 1</HubContentItem>
-					</div>
+			<CardContent className='flex items-center gap-4'>
+				<h3 className='text-xl font-semibold'>Current Style</h3>
+				<div className='max-w-[18rem] grow'>
+					<ContentStylePreview type={hub.buttonType}>Selected Style</ContentStylePreview>
 				</div>
 			</CardContent>
-			<hr className='my-2' />
-			<CardFooter className='flex justify-between pb-3'></CardFooter>
+			<CardFooter className='flex justify-between border-t bg-gray-100/80 pb-4 pt-3'>
+				<p className='text-sm text-gray-500'>Adjust your header/link style.</p>
+				<LinkStyleDialog hub={hub} />
+			</CardFooter>
 		</Card>
 	);
 }

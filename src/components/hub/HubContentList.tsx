@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils';
 import { ContentWithOrder, HubAndContent } from '@/types/types';
 import { HubContent } from '@prisma/client';
-import { CornerDownRight, GrabIcon, Grip, Pen } from 'lucide-react';
+import { CornerDownRight, GrabIcon, Grip, Pen, Ellipsis } from 'lucide-react';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useEffect, useRef, useState } from 'react';
@@ -12,7 +12,7 @@ import { arrayMove, SortableContext, verticalListSortingStrategy, useSortable } 
 import { CSS } from '@dnd-kit/utilities';
 import { useDeleteHubContentMutation, useUpdateHubContentOrder } from './mutations';
 import { toast } from 'sonner';
-import HubContentDeleteDialog from './settings/HubContentDeleteDialog';
+import HubContentDeleteDialog from './HubContentDeleteDialog';
 
 export default function HubContentList({ parentHub, contentList }) {
 	const [content, setContent] = useState(contentList.content);
@@ -88,36 +88,53 @@ function ContentCard({ id, content }: { id: string; content: HubContent }) {
 
 	return (
 		<div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-			<div className='flex items-center rounded-md border px-5 py-3'>
-				<div className='pr-2'>
-					<Grip size={16} className='cursor-grab text-gray-600' />
-				</div>
-				<div className='flex grow flex-col'>
-					<div className='flex items-center'>
-						{content.type === 'link' && (
-							<Avatar className='ml-4 h-5 w-5 rounded-none align-middle'>
-								<AvatarImage src={`https://www.google.com/s2/favicons?domain=${content.link}`} />
-							</Avatar>
-						)}
-
-						<h1 className={cn('ml-2 grow font-black', content.type === 'link' ? 'text-left font-medium' : 'ml-0 text-center')}>{content.title}</h1>
+			<div className='flex flex-col rounded-md border px-5 py-3 md:flex-row'>
+				<div className='flex w-full items-center'>
+					{/* GRIP / DRAG  */}
+					<div className='hidden pr-2 md:block'>
+						<Grip size={16} className='cursor-grab text-gray-600' />
 					</div>
+					{/* END GRIP / DRAG */}
 
-					{content.type === 'link' && (
-						<div className='flex gap-2'>
-							<CornerDownRight size={16} className='ml-8 pt-1 text-gray-600' />
-							<p className='text-sm text-gray-600'>{content.link}</p>
+					{/* LINK INFO */}
+					<div className='flex grow flex-col'>
+						<div className='flex items-center'>
+							{content.type === 'link' && (
+								<Avatar className='ml-4 h-5 w-5 rounded-none align-middle'>
+									<AvatarImage src={`https://www.google.com/s2/favicons?domain=${content.link}`} />
+								</Avatar>
+							)}
+
+							<h1 className={cn('ml-2 grow font-black', content.type === 'link' ? 'text-left font-medium' : 'ml-0 text-center')}>{content.title}</h1>
 						</div>
-					)}
+
+						{content.type === 'link' && (
+							<div className='flex gap-2'>
+								<CornerDownRight size={16} className='ml-8 pt-1 text-gray-600' />
+								<p className='text-sm text-gray-600'>{content.link}</p>
+							</div>
+						)}
+					</div>
+					{/* END LINK INFO */}
 				</div>
-				<div className='flex w-auto gap-2'>
+
+				{/* START TAGS, EDIT, DELETE */}
+				<div className='mt-2 flex min-h-6 w-auto justify-center gap-2 self-center md:mt-0'>
 					<Badge variant={content.active ? '' : 'destructive'}>{content.active ? 'Active' : 'Private'}</Badge>
 					{content.type === 'link' && <Badge variant={content.adult ? 'destructive' : 'success'}>{content.adult ? 'NSFW' : 'SFW'}</Badge>}
-					{content.type === 'link' && <Badge variant={'outline'}>{content.clicks?.toFixed()} Clicks</Badge>}
+					{content.type === 'link' && (
+						<Badge variant={'outline'} className=''>
+							{content.clicks?.toFixed()} Clicks
+						</Badge>
+					)}
 					<div className='flex items-center gap-2'>
 						<Pen size={16} className='text-gray-600' />
 						{content && <HubContentDeleteDialog content={content} />}
 					</div>
+				</div>
+				{/* END TAGS, EDIT, DELETE */}
+				<div className='mt-2 flex grow items-center justify-between md:hidden'>
+					<Ellipsis size={16} className='mx-auto cursor-grab text-gray-600' />
 				</div>
 			</div>
 		</div>

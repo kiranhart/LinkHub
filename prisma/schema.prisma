@@ -38,7 +38,7 @@ model Hub {
     backgroundColor     String? @default("CB94F8")
     backgroundDirection String? @default("down")
 
-    buttonType      String? @default("fill_rounded")
+    buttonType      String? @default("FillRounded")
     buttonColor     String? @default("FFFFFF")
     buttonTextColor String? @default("000000")
 
