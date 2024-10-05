@@ -1,6 +1,6 @@
 import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { deleteHub, updateHubBio, updateHubContentOrder, updateHubDisplayName, updateHubUsername, deleteContent, updateHubContentStyle } from './actions';
+import { deleteHub, updateHubBio, updateHubContentOrder, updateHubDisplayName, updateHubUsername, deleteContent, updateHubContentStyle, updateHubBackgroundType } from './actions';
 import { usePathname, useRouter } from 'next/navigation';
 import { Hub } from '@prisma/client';
 
@@ -74,6 +74,7 @@ export function useUpdateHubDisplayName() {
     return mutation;
 }
 
+// updateHubBackgroundType
 export function useUpdateHubContentStyle() {
     const queryClient = useQueryClient();
 
@@ -90,6 +91,29 @@ export function useUpdateHubContentStyle() {
         onError(error) {
             console.log(error);
             toast.error('Failed to update style. Please try again')
+        }
+    })
+
+    return mutation;
+}
+
+
+export function useUpdateHubBackgroundType() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: updateHubBackgroundType,
+        onSuccess: (updatedHub) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub', 'hub-data']}
+            queryClient.invalidateQueries(queryFilter);
+            toast.success("Successfully changed background style")      
+        },
+        onError(error) {
+            console.log(error);
+            toast.error('Failed to update background. Please try again')
         }
     })
 

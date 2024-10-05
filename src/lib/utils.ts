@@ -7,7 +7,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-
 export function extractHubFromURL(url: string): string {
   const regex = /hub\/([^/]+)/;
   const match = url.match(regex);

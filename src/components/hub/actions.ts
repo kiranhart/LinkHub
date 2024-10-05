@@ -3,7 +3,7 @@
 import { auth } from "@/auth"
 import { db } from "@/db"
 import getSession from "@/lib/getSession"
-import { ContentStyle } from "@/types/types";
+import { ContentStyle, BackgroundStyle } from "@/types/types";
 import { Prisma } from "@prisma/client";
 
 export async function deleteHub({ username }: { username: string }) {
@@ -181,6 +181,32 @@ export async function updateHubContentStyle({ username, contentStyle }: {  usern
     const updatedHub = await db.hub.update({
         data: {
             buttonType: contentStyle
+        },
+        where: {
+            username: username.toLowerCase()
+        }
+    })
+
+
+    return updatedHub;
+}
+
+export async function updateHubBackgroundType({ username, bgType }: {  username: string, bgType: BackgroundStyle}) {
+    const session = await getSession();
+    if (!session.user) throw new Error("Unauthorized");
+    
+    const hub = await db.hub.findUnique({
+        where: {
+            username: username.toLowerCase()
+        }
+    })
+
+    if (!hub) throw new Error("Hub not found");
+    if (hub.userId !== session.user?.id) throw new Error("Unauthorized");
+
+    const updatedHub = await db.hub.update({
+        data: {
+            backgroundType: bgType
         },
         where: {
             username: username.toLowerCase()

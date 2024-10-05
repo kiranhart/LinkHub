@@ -18,7 +18,7 @@ export type ContentStyleSoftShadow = 'SoftShadowRounded' | 'SoftShadowRound' | '
 export type ContentStyleHardShadow = 'HardShadowRounded' | 'HardShadowRound' | 'HardShadowSquared';
 
 export type ContentStyle = ContentStyleFill | ContentStyleOutline | ContentStyleSoftShadow | ContentStyleHardShadow;
-
+export type BackgroundStyle = 'Solid' | 'Gradient'
 
 const contentStyleFill: ContentStyleFill[] = ['FillRounded', 'FillRound', 'FillSquared'];
 const contentStyleOutline: ContentStyleOutline[] = ['OutlineRounded', 'OutlineRound', 'OutlineSquared'];
