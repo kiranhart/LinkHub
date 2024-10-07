@@ -12,6 +12,10 @@ const fontSans = FontSans({
 	variable: '--font-sans',
 });
 
+export const metadata = {
+	title: 'LinkHub - A home for your links.'
+}
+
 export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang='en'>

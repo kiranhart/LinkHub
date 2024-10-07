@@ -14,7 +14,7 @@ export default function LinkStyleForm({ hub }: { hub: Hub }) {
 				<p className='text-sm text-gray-500'>How should your header/links be styled?</p>
 			</CardHeader>
 			<CardContent className='flex items-center gap-4'>
-				<h3 className='text-xl font-semibold'>Current Style</h3>
+				{/* <h3 className='text-xl font-semibold'>Current Style</h3> */}
 				<div className='max-w-[18rem] grow'>
 					<ContentStylePreview type={hub.buttonType}>Selected Style</ContentStylePreview>
 				</div>

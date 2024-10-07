@@ -1,6 +1,6 @@
 import { QueryFilters, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { deleteHub, updateHubBio, updateHubContentOrder, updateHubDisplayName, updateHubUsername, deleteContent, updateHubContentStyle, updateHubBackgroundType } from './actions';
+import { deleteHub, updateHubBio, updateHubContentOrder, updateHubDisplayName,updateHubColorSettings, updateHubUsername, deleteContent, updateHubContentStyle, updateHubBackgroundType, updateHubPicture } from './actions';
 import { usePathname, useRouter } from 'next/navigation';
 import { Hub } from '@prisma/client';
 
@@ -114,6 +114,50 @@ export function useUpdateHubBackgroundType() {
         onError(error) {
             console.log(error);
             toast.error('Failed to update background. Please try again')
+        }
+    })
+
+    return mutation;
+}
+
+export function useUpdateHubPicture() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: updateHubPicture,
+        onSuccess: (updatedHub) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub', 'hub-data']}
+            queryClient.invalidateQueries(queryFilter);
+            toast.success("Successfully updated hub picture")      
+        },
+        onError(error) {
+            console.log(error);
+            toast.error('Failed to update picture. Please try again')
+        }
+    })
+
+    return mutation;
+}
+
+export function useUpdateHubColorSettings() {
+    const queryClient = useQueryClient();
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const mutation = useMutation({
+        mutationFn: updateHubColorSettings,
+        onSuccess: (updatedHub) => {
+            const queryFilter: QueryFilters = { queryKey: ['hub', 'hub-data']}
+            queryClient.invalidateQueries(queryFilter);
+            toast.success("Successfully saved changes")      
+        },
+        onError(error) {
+            console.log(error);
+            toast.error('Failed to save. Please try again')
         }
     })
 

@@ -9,7 +9,7 @@ import BackgroundStyleDialog from './BackgroundStyleDialog';
 
 export default function BackgroundStyleForm({ hub }: { hub: Hub }) {
 	return (
-		<Card>
+		<Card className='h-fit'>
 			<CardHeader>
 				<CardTitle className='text-xl font-medium'>Background Style</CardTitle>
 				<p className='text-sm text-gray-500'>What type of background do you want to use?</p>

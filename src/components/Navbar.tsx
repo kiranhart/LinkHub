@@ -59,7 +59,7 @@ export default function Navbar() {
 					{/* account profile thing */}
 					<div className='flex items-center space-x-6'>
 						<button className='transition-all duration-75 active:scale-95'>
-							<span className='bg-gradient-to-r from-violet-600 to-pink-600 bg-clip-text text-sm text-transparent'>Upgrade</span>
+							{/* <span className='bg-gradient-to-r from-violet-600 to-pink-600 bg-clip-text text-sm text-transparent'>Upgrade</span> */}
 						</button>
 						<div className='relative inline-block pt-1.5'>
 							<button className='group relative sm:inline-flex' type='button'>

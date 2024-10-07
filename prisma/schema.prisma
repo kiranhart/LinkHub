@@ -1,5 +1,5 @@
 datasource db {
-    provider = "sqlite"
+    provider = "mysql"
     url      = env("DATABASE_URL")
 }
 
@@ -24,13 +24,15 @@ model HubContent {
 }
 
 model Hub {
-    id          String  @id @default(cuid())
-    username    String  @unique
-    name        String
-    description String?
-    picture     String?
-    public      Boolean @default(true)
-    adult       Boolean @default(false)
+    id                String  @id @default(cuid())
+    username          String  @unique
+    name              String
+    description       String?
+    picture           String?
+    pictureDeleteHash String?
+
+    public Boolean @default(true)
+    adult  Boolean @default(false)
 
     theme String? @default("custom")
 
@@ -38,9 +40,12 @@ model Hub {
     backgroundColor     String? @default("CB94F8")
     backgroundDirection String? @default("down")
 
-    buttonType      String? @default("FillRounded")
-    buttonColor     String? @default("FFFFFF")
-    buttonTextColor String? @default("000000")
+    buttonType        String? @default("FillRounded")
+    buttonColor       String? @default("FFFFFF")
+    buttonShadowColor String? @default("000000")
+    buttonTextColor   String? @default("000000")
+
+    textColor String? @default("000000")
 
     content      HubContent[]
     contentOrder String?
